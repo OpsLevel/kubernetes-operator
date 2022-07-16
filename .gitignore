@@ -1,0 +1,4 @@
+.idea
+bin/controller-gen
+zz_generated.deepcopy.go
+.DS_Store

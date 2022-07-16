@@ -1,0 +1,6 @@
+apiVersion: opslevel.com/v1
+kind: ClusterIdentifier
+metadata:
+  name: dev
+spec:
+  name: dev

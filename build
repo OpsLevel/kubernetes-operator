@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+GOBIN=$(pwd)/bin go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.9.2
+./bin/controller-gen object paths=./...
+./bin/controller-gen crd paths=./... output:crd:artifacts:config=crds
