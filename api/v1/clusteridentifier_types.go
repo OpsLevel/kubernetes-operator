@@ -36,7 +36,3 @@ type ClusterIdentifierList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClusterIdentifier `json:"items"`
 }
-
-func init() {
-	SchemeBuilder.Register(&ClusterIdentifier{}, &ClusterIdentifierList{})
-}
