@@ -8,6 +8,9 @@ import (
 	"github.com/spf13/viper"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -17,15 +20,20 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+var (
+	scheme = runtime.NewScheme()
+)
+
 var rootCmd = &cobra.Command{
 	Use:   "opslevel-operator",
 	Short: "Opslevel Kubernetes Operator",
 	Long:  `Opslevel Kubernetes Operator`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Creating Manager...")
-		mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{})
+		mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
+			Scheme: scheme,
+		})
 		cobra.CheckErr(err)
-		opslevelv1.AddToScheme(mgr.GetScheme())
 		fmt.Println("Creating Controller...")
 		err = builder.ControllerManagedBy(mgr).For(&opslevelv1.ClusterIdentifier{}).Owns(&corev1.ConfigMap{}).Complete(&OpsLevelReconciler{Client: mgr.GetClient()})
 		cobra.CheckErr(err)
@@ -49,6 +57,9 @@ func Execute() {
 }
 
 func init() {
+	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
+	utilruntime.Must(opslevelv1.AddToScheme(scheme))
+
 	cobra.OnInitialize(initConfig)
 }
 

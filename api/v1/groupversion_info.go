@@ -1,10 +1,9 @@
 // Package v1 contains API Schema definitions for the opslevel v1 API group
-//+kubebuilder:object:generate=true
-//+groupName=opslevel.com
+// +kubebuilder:object:generate=true
+// +groupName=opslevel.com
 package v1
 
 import (
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
@@ -15,9 +14,7 @@ var (
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
-)
 
-func AddToScheme(scheme *runtime.Scheme) {
-	SchemeBuilder.Register(&ClusterIdentifier{}, &ClusterIdentifierList{})
-	SchemeBuilder.AddToScheme(scheme)
-}
+	// AddToScheme adds the types in this group-version to the given scheme.
+	AddToScheme = SchemeBuilder.AddToScheme
+)
